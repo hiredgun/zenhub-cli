@@ -36,6 +36,8 @@ Usage:
   zenhub board <project> [--compact|-c] [--filter|-f <filter>] [--monochrome|-m]
   zenhub browse <project> [issue]
   zenhub events <project> <issue> [--compact|-c] [--filter|-f <filter>] [--monochrome|-m]
+  zenhub init [--compact|-c] [--filter|-f <filter>] [--github-token|-G <token>] [--monochrome|-m]
+    [--zenhub-token|-Z <token>]
   zenhub issue <project> <issue> [--compact|-c] [--filter|-f <filter>] [--monochrome|-m]
 
 Configuration Commands:
