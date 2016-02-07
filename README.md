@@ -21,11 +21,13 @@ $ brew install zenhub-cli
 
 # Initialize with your ZenHub and GitHub tokens:
 $ zenhub init
-Enter ZenHub token: <zenhub token>
-Enter GitHub token (used for project slug lookups): <github token>
+Enter ZenHub API token: <zenhub token>
+Enter GitHub personal access token (used for project slug lookups): <github token>
 ```
 
-> __PROTIP:__ Ensure you have a [ZenHub token](https://dashboard.zenhub.io/#/settings).
+> __PROTIPS:__
+* Ensure you have a [ZenHub API token](https://dashboard.zenhub.io/#/settings)
+* Ensure you have a [GitHub personal access token](https://github.com/settings/tokens)
 
 ## Usage
 ```bash
