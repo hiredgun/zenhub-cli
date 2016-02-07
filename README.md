@@ -34,6 +34,7 @@ Enter GitHub personal access token (used for project slug lookups): <github toke
 $ zenhub --help
 Usage:
   zenhub board <project> [--compact|-c] [--filter|-f <filter>] [--monochrome|-m]
+  zenhub browse <project> [issue]
   zenhub events <project> <issue> [--compact|-c] [--filter|-f <filter>] [--monochrome|-m]
   zenhub issue <project> <issue> [--compact|-c] [--filter|-f <filter>] [--monochrome|-m]
 
@@ -44,6 +45,9 @@ Core Commands:
   board     Project board pipelines plus the issues contained within each pipeline
   events    Project issue events, sorted by most recent
   issue     Project issue time estimate, pipeline, and any +1s
+
+Convenience Commands:
+  browse    Open ZenHub/GitHub page for the given project or project issue
 ```
 
 > __PROTIPS:__
