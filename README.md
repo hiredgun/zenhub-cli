@@ -32,20 +32,20 @@ Enter GitHub token (used for project slug lookups): <github token>
 $ zenhub --help
 Usage:
   zenhub board <project> [--compact|-c] [--filter|-f <filter>] [--monochrome|-m]
+  zenhub events <project> <issue> [--compact|-c] [--filter|-f <filter>] [--monochrome|-m]
   zenhub issue <project> <issue> [--compact|-c] [--filter|-f <filter>] [--monochrome|-m]
-  zenhub issue-events <project> <issue> [--compact|-c] [--filter|-f <filter>] [--monochrome|-m]
 
 Configuration Commands:
   init    Initialize
 
 Core Commands:
-  board           Project board pipelines plus the issues contained within each pipeline
-  issue           Project issue time estimate, pipeline, and any +1s
-  issue-events    Project issue events, sorted by most recent
+  board     Project board pipelines plus the issues contained within each pipeline
+  events    Project issue events, sorted by most recent
+  issue     Project issue time estimate, pipeline, and any +1s
 ```
 
 > __PROTIPS:__
-* Project names are represented as a combination of username and project name
+* Project slug represented as a combination of username and project name
 (e.g. rockymadden/zenhub-cli).
 * `--` can be used as a placeholder for the project, when inside a GitHub-based git repo.
 * Filters are simply [jq filters](https://stedolan.github.io/jq/manual/), you can provide any filter
