@@ -51,7 +51,7 @@ Core Commands:
 > __PROTIPS:__
 * Project slug represented as a combination of username and project name
 (e.g. rockymadden/zenhub-cli).
-* `--` can be used as a placeholder for the project, when inside a GitHub-based git repo.
+* `--` can be used as a placeholder for the current project, when inside a GitHub-based git repo.
 * Project placeholder is implicitly applied, when not provided and inside a GitHub-based git repo.
 * Filters are simply [jq filters](https://stedolan.github.io/jq/manual/), you can provide any filter
 that it can handle.
