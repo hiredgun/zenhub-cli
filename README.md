@@ -5,7 +5,7 @@
 [![license](http://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
 [![pm](http://img.shields.io/badge/pm-zenhub-blue.svg)](https://www.zenhub.io)
 [![chat](http://img.shields.io/badge/chat-slack-blue.svg)](https://rockymadden-slack.herokuapp.com)
-[![circleci](http://img.shields.io/badge/circleci-passing-brightgreen.svg)](https://circleci.com/gh/rockymadden/zenhub-cli)
+[![circleci](https://circleci.com/gh/rockymadden/zenhub-cli.svg?style=shield)](https://circleci.com/gh/rockymadden/zenhub-cli)
 
 A simple, yet extremely flexible command line interface for [ZenHub](https://www.zenhub.io). Deep
 integration with [jq](https://github.com/stedolan/jq) allows for the ability to perform complex
