@@ -77,7 +77,14 @@ esac
 ## Command utility functions ######################################################################
 function jqify() {
   case "${1}" in
-    GET) local rsp ; rsp=$(curl -f -s -H 'Accept: application/json' "${2}") ;;
+    GET)
+      local rsp
+      rsp=$(\
+        curl -f -s \
+          -H 'Accept: application/json' \
+          -H "X-Authentication-Token: ${zhtoken}" \
+          "${2}")
+    ;;
   esac
 
   case "$?" in
@@ -94,14 +101,12 @@ function lookup-project-id() {
 ## Command functions ##############################################################################
 function board() {
   local pid=$(lookup-project-id ${project})
-  jqify GET \
-    "https://api.zenhub.io/p1/repositories/${pid}/board?access_token=${zhtoken}"
+  jqify GET "https://api.zenhub.io/p1/repositories/${pid}/board"
 }
 
 function events() {
   local pid=$(lookup-project-id ${project})
-  jqify GET \
-    "https://api.zenhub.io/p1/repositories/${pid}/issues/${issue}/events?access_token=${zhtoken}"
+  jqify GET "https://api.zenhub.io/p1/repositories/${pid}/issues/${issue}/events"
 }
 
 function help() {
@@ -136,8 +141,7 @@ function init() {
 
 function issue() {
   local pid=$(lookup-project-id ${project})
-  jqify GET \
-    "https://api.zenhub.io/p1/repositories/${pid}/issues/${issue}?access_token=${zhtoken}"
+  jqify GET "https://api.zenhub.io/p1/repositories/${pid}/issues/${issue}"
 }
 
 function version() {
