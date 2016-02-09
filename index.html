@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>zenhub-cli by rockymadden</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>zenhub-cli</h1>
+        <p>Powerful ZenHub CLI via pure bash</p>
+
+        <p class="view"><a href="https://github.com/rockymadden/zenhub-cli">View the Project on GitHub <small>rockymadden/zenhub-cli</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/rockymadden/zenhub-cli/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/rockymadden/zenhub-cli/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/rockymadden/zenhub-cli">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p><a href="https://github.com/rockymadden/zenhub-cli/releases"><img src="http://img.shields.io/badge/version-v0.0.0-blue.svg" alt="version"></a>
+<a href="http://semver.org"><img src="http://img.shields.io/badge/versioning-semver-blue.svg" alt="versioning"></a>
+<a href="https://guides.github.com/introduction/flow/"><img src="http://img.shields.io/badge/branching-github%20flow-blue.svg" alt="branching"></a>
+<a href="https://opensource.org/licenses/MIT"><img src="http://img.shields.io/badge/license-mit-blue.svg" alt="license"></a>
+<a href="https://www.zenhub.io"><img src="http://img.shields.io/badge/pm-zenhub-blue.svg" alt="pm"></a>
+<a href="https://rockymadden-slack.herokuapp.com"><img src="http://img.shields.io/badge/chat-slack-blue.svg" alt="chat"></a>
+<a href="https://circleci.com/gh/rockymadden/zenhub-cli"><img src="https://circleci.com/gh/rockymadden/zenhub-cli.svg?style=shield" alt="circleci"></a></p>
+
+<p>A simple, yet extremely flexible command line interface for <a href="https://www.zenhub.io">ZenHub</a>. Deep
+integration with <a href="https://github.com/stedolan/jq">jq</a> allows for the ability to perform complex
+declarative/higher-order operations on responses, helping you perform complex piping/compositional
+operations with relative ease (see the <a href="test/integration">integration tests</a> for some simple
+examples).</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"># Install from tap:</span>
+$ brew tap rockymadden/rockymadden
+$ brew install zenhub-cli
+
+<span class="pl-c"># Initialize with your ZenHub and GitHub tokens:</span>
+$ zenhub init
+Enter ZenHub API token: <span class="pl-k">&lt;</span>zenhub token<span class="pl-k">&gt;</span>
+Enter GitHub personal access token (used <span class="pl-k">for</span> project slug lookups): <span class="pl-k">&lt;</span>github token<span class="pl-k">&gt;</span></pre></div>
+
+<blockquote>
+<p><strong>PROTIPS:</strong></p>
+
+<ul>
+<li>Ensure you have a <a href="https://dashboard.zenhub.io/#/settings">ZenHub API token</a>
+</li>
+<li>Ensure you have a <a href="https://github.com/settings/tokens">GitHub personal access token</a>
+</li>
+</ul>
+</blockquote>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<div class="highlight highlight-source-shell"><pre>$ zenhub --help
+Usage:
+  zenhub board <span class="pl-k">&lt;</span>project<span class="pl-k">&gt;</span> [--compact<span class="pl-k">|</span>-c] [--filter<span class="pl-k">|</span>-f <span class="pl-k">&lt;</span>filter<span class="pl-k">&gt;</span>] [--monochrome<span class="pl-k">|</span>-m]
+  zenhub events <span class="pl-k">&lt;</span>project<span class="pl-k">&gt;</span> <span class="pl-k">&lt;</span>issue<span class="pl-k">&gt;</span> [--compact<span class="pl-k">|</span>-c] [--filter<span class="pl-k">|</span>-f <span class="pl-k">&lt;</span>filter<span class="pl-k">&gt;</span>] [--monochrome<span class="pl-k">|</span>-m]
+  zenhub init [--compact<span class="pl-k">|</span>-c] [--filter<span class="pl-k">|</span>-f <span class="pl-k">&lt;</span>filter<span class="pl-k">&gt;</span>] [--github-token<span class="pl-k">|</span>-G <span class="pl-k">&lt;</span>token<span class="pl-k">&gt;</span>] [--monochrome<span class="pl-k">|</span>-m]
+    [--zenhub-token<span class="pl-k">|</span>-Z <span class="pl-k">&lt;</span>token<span class="pl-k">&gt;</span>]
+  zenhub issue <span class="pl-k">&lt;</span>project<span class="pl-k">&gt;</span> <span class="pl-k">&lt;</span>issue<span class="pl-k">&gt;</span> [--compact<span class="pl-k">|</span>-c] [--filter<span class="pl-k">|</span>-f <span class="pl-k">&lt;</span>filter<span class="pl-k">&gt;</span>] [--monochrome<span class="pl-k">|</span>-m]
+
+Configuration Commands:
+  init    Initialize
+
+Core Commands:
+  board     Project board pipelines plus the issues contained within each pipeline
+  events    Project issue events, sorted by most recent
+  issue     Project issue <span class="pl-k">time</span> estimate, pipeline, and +1s</pre></div>
+
+<blockquote>
+<p><strong>PROTIPS:</strong></p>
+
+<ul>
+<li>Project slug represented as a combination of username and project name
+(e.g. rockymadden/zenhub-cli).</li>
+<li>
+<code>--</code> can be used as a placeholder for the project, when inside a GitHub-based git repo.</li>
+<li>Project placeholder is implicitly applied, when not provided and inside a GitHub-based git repo.</li>
+<li>Filters are simply <a href="https://stedolan.github.io/jq/manual/">jq filters</a>, you can provide any filter
+that it can handle.</li>
+<li>All commands prompt for required arguments which were not provided via options or arguments. This
+allows for both traditional usage and prompt-based usage.</li>
+</ul>
+</blockquote>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<pre><code>The MIT License (MIT)
+
+Copyright (c) 2016 Rocky Madden (https://rockymadden.com/)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/rockymadden">rockymadden</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
