@@ -1,0 +1,155 @@
+#!/usr/bin/env bash
+
+bindir=
+etcdir=
+ghtoken=$(test -f "${etcdir}/zenhub" && sed -n '2p' < "${etcdir}/zenhub")
+zhtoken=$(test -f "${etcdir}/zenhub" && sed -n '1p' < "${etcdir}/zenhub")
+
+## Command parsing ################################################################################
+cmd="${1}" ; shift
+
+## Argument and option utility functions ##########################################################
+function placehold-project() {
+  local url=$(hub browse -u 2> /dev/null)
+  echo "$(echo "${url}" | cut -d '/' -f4)/$(echo "${url}" | cut -d '/' -f5)"
+}
+
+## Argument and option parsing ####################################################################
+while (( "$#" )); do
+  case "${1}" in
+    --compact) compact='-c' ; shift ;;
+    --filter=*) filter=${1/--filter=/''} ; shift ;;
+    --github-token=*) ghtoken=${1/--github-token=/''} ; shift ;;
+    --issue=*) issue=${1/--issue=/''} ; shift ;;
+    --monochrome) monochrome='-M' ; shift ;;
+    --page=*) page=${1/--page=/''} ; shift ;;
+    --project=*) project=${1/--project=/''} ; shift ;;
+    --zenhub-token=*) zhtoken=${1/--zenhub-token=/''} ; shift ;;
+    -c) compact='-c' ; shift ;;
+    -f*) filter=${2} ; shift ; shift ;;
+    -G*) ghtoken=${2} ; shift ; shift ;;
+    -i*) issue=${2} ; shift ; shift ;;
+    -m) monochrome='-M' ; shift ;;
+    -P*) page=${2} ; shift ; shift ;;
+    -p*) project=${2} ; shift ; shift ;;
+    -Z*) zhtoken=${2} ; shift ; shift ;;
+    --)
+      case "${cmd}" in
+        board|events|issue) test -z "${project}" && project=$(placehold-project) ;;
+      esac
+      shift
+    ;;
+    *)
+      case "${cmd}" in
+        events|issue) test -n "${1}" && test -n "${project}" && issue=${1} ;;
+      esac
+      case "${cmd}" in
+        board|events|issue) test -n "${1}" && test -z "${project}" && project=${1} ;;
+      esac
+      shift
+    ;;
+  esac
+done
+
+## Implicit/default arguments and options #########################################################
+case "${cmd}" in
+  board)
+    test -z "${project}" && test -n "$(hub browse -u 2> /dev/null)" && project=$(placehold-project)
+  ;;
+esac
+
+## Argument and option prompting ##################################################################
+case "${cmd}" in
+  init)
+    test -z "${zhtoken}" && read -e -p 'Enter ZenHub API token: ' -s zhtoken ; echo
+    test -z "${ghtoken}" && read -e -p 'Enter GitHub personal access token: ' -s ghtoken ; echo
+  ;;
+esac
+case "${cmd}" in
+  board|events|issue)
+    test -z "${project}" && read -e -p 'Enter project slug (e.g. rockymadden/zenhub-cli): ' project
+  ;;
+esac
+case "${cmd}" in
+  events|issue)
+    test -z "${issue}" && read -e -p 'Enter issue (e.g. 123): ' issue
+  ;;
+esac
+
+## Command utility functions ######################################################################
+function jqify() {
+  case "${1}" in
+    GET) local rsp ; rsp=$(curl -f -s -H 'Accept: application/json' "${2}") ;;
+  esac
+
+  case "$?" in
+    0) echo ${rsp} | jq -r ${compact} ${monochrome} "${filter:=.}" ;;
+    *) return 1 ;;
+  esac
+}
+
+function lookup-project-id() {
+  curl -f -s -H "Authorization: token ${ghtoken}" "https://api.github.com/repos/${1}" | \
+  jq -r -c -M '.id'
+}
+
+## Command functions ##############################################################################
+function board() {
+  local pid=$(lookup-project-id ${project})
+  jqify GET \
+    "https://api.zenhub.io/p1/repositories/${pid}/board?access_token=${zhtoken}"
+}
+
+function events() {
+  local pid=$(lookup-project-id ${project})
+  jqify GET \
+    "https://api.zenhub.io/p1/repositories/${pid}/issues/${issue}/events?access_token=${zhtoken}"
+}
+
+function help() {
+  local a=(${0//\// })
+  local bin=${a[${#a[@]}-1]}
+
+  echo 'Usage:'
+  echo "  ${bin} board <project> [--compact|-c] [--filter|-f <filter>] [--monochrome|-m]"
+  echo "  ${bin} events <project> <issue> [--compact|-c] [--filter|-f <filter>] [--monochrome|-m]"
+  echo "  ${bin} init [--compact|-c] [--filter|-f <filter>] [--github-token|-G <token>] [--monochrome|-m]"
+  echo '    [--zenhub-token|-Z <token>]'
+  echo "  ${bin} issue <project> <issue> [--compact|-c] [--filter|-f <filter>] [--monochrome|-m]"
+  echo
+  echo 'Configuration Commands:'
+  echo '  init    Initialize'
+  echo
+  echo 'Core Commands:'
+  echo '  board     Project board pipelines plus the issues contained within each pipeline'
+  echo '  events    Project issue events, sorted by most recent'
+  echo '  issue     Project issue time estimate, pipeline, and +1s'
+}
+
+function init() {
+  echo "${zhtoken}" > "${etcdir}/zenhub" && \
+  echo "${ghtoken}" >> "${etcdir}/zenhub"
+
+  case "$?" in
+    0) echo '{"outcome": "success"}' | jq -r ${compact} ${monochrome} "${filter:=.}" ;;
+    *) echo '{"outcome": "failed"}' | jq -r ${compact} ${monochrome} "${filter:=.}" ; return 1 ;;
+  esac
+}
+
+function issue() {
+  local pid=$(lookup-project-id ${project})
+  jqify GET \
+    "https://api.zenhub.io/p1/repositories/${pid}/issues/${issue}?access_token=${zhtoken}"
+}
+
+function version() {
+  echo 'v0.0.0'
+}
+
+## Command routing ################################################################################
+case "${cmd}" in
+  --help|-h) help ; exit 0 ;;
+  --version|-v) version ; exit 0 ;;
+  board|events|init|issue) "${cmd}" ; exit "$?" ;;
+  *) help ; exit 1 ;;
+esac
