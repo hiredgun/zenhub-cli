@@ -22,7 +22,6 @@ while (( "$#" )); do
     --github-token=*) ghtoken=${1/--github-token=/''} ; shift ;;
     --issue=*) issue=${1/--issue=/''} ; shift ;;
     --monochrome) monochrome='-M' ; shift ;;
-    --page=*) page=${1/--page=/''} ; shift ;;
     --project=*) project=${1/--project=/''} ; shift ;;
     --zenhub-token=*) zhtoken=${1/--zenhub-token=/''} ; shift ;;
     -c) compact='-c' ; shift ;;
@@ -30,7 +29,6 @@ while (( "$#" )); do
     -G*) ghtoken=${2} ; shift ; shift ;;
     -i*) issue=${2} ; shift ; shift ;;
     -m) monochrome='-M' ; shift ;;
-    -P*) page=${2} ; shift ; shift ;;
     -p*) project=${2} ; shift ; shift ;;
     -Z*) zhtoken=${2} ; shift ; shift ;;
     --)
