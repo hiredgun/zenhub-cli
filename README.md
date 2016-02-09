@@ -58,6 +58,44 @@ that it can handle.
 * All commands prompt for required arguments which were not provided via options or arguments. This
 allows for both traditional usage and prompt-based usage.
 
+## Examples and Recipes
+
+### `board`:
+
+```bash
+# Implicit project:
+$ zenhub board
+
+# Placeheld project:
+$ zenhub board --
+
+# Explicit project:
+$ zenhub board rockymadden/zenhub-cli
+
+# With filter:
+$ zenhub board --filter='.pipelines | .[0] | .name'
+```
+
+### `events`:
+
+```bash
+# Placeheld project and explicit issue:
+$ zenhub events -- 1
+
+# With filter:
+$ zenhub events --filter='.[0] | .user_id'
+```
+
+### `issue`:
+
+```bash
+# Placeheld project and explicit issue:
+$ zenhub issue -- 1
+
+# With filter:
+$ zenhub issue --filter='.pipeline | .name'
+```
+
 ## License
 ```
 The MIT License (MIT)
