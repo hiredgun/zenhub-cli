@@ -22,7 +22,7 @@ $ brew install zenhub-cli
 # Initialize with your ZenHub and GitHub tokens:
 $ zenhub init
 Enter ZenHub API token: <zenhub token>
-Enter GitHub personal access token (used for project slug lookups): <github token>
+Enter GitHub personal access token (used solely for project slug lookups): <github token>
 ```
 
 > __PROTIPS:__
@@ -51,12 +51,50 @@ Core Commands:
 > __PROTIPS:__
 * Project slug represented as a combination of username and project name
 (e.g. rockymadden/zenhub-cli).
-* `--` can be used as a placeholder for the project, when inside a GitHub-based git repo.
+* `--` can be used as a placeholder for the current project, when inside a GitHub-based git repo.
 * Project placeholder is implicitly applied, when not provided and inside a GitHub-based git repo.
 * Filters are simply [jq filters](https://stedolan.github.io/jq/manual/), you can provide any filter
 that it can handle.
 * All commands prompt for required arguments which were not provided via options or arguments. This
 allows for both traditional usage and prompt-based usage.
+
+## Examples and Recipes
+
+### `board`:
+
+```bash
+# Implicit project:
+$ zenhub board
+
+# Placeheld project:
+$ zenhub board --
+
+# Explicit project:
+$ zenhub board rockymadden/zenhub-cli
+
+# With filter:
+$ zenhub board --filter='.pipelines | .[0] | .name'
+```
+
+### `events`:
+
+```bash
+# Placeheld project and explicit issue:
+$ zenhub events -- 1
+
+# With filter:
+$ zenhub events --filter='.[0] | .user_id'
+```
+
+### `issue`:
+
+```bash
+# Placeheld project and explicit issue:
+$ zenhub issue -- 1
+
+# With filter:
+$ zenhub issue --filter='.pipeline | .name'
+```
 
 ## License
 ```

@@ -22,7 +22,6 @@ while (( "$#" )); do
     --github-token=*) ghtoken=${1/--github-token=/''} ; shift ;;
     --issue=*) issue=${1/--issue=/''} ; shift ;;
     --monochrome) monochrome='-M' ; shift ;;
-    --page=*) page=${1/--page=/''} ; shift ;;
     --project=*) project=${1/--project=/''} ; shift ;;
     --zenhub-token=*) zhtoken=${1/--zenhub-token=/''} ; shift ;;
     -c) compact='-c' ; shift ;;
@@ -30,7 +29,6 @@ while (( "$#" )); do
     -G*) ghtoken=${2} ; shift ; shift ;;
     -i*) issue=${2} ; shift ; shift ;;
     -m) monochrome='-M' ; shift ;;
-    -P*) page=${2} ; shift ; shift ;;
     -p*) project=${2} ; shift ; shift ;;
     -Z*) zhtoken=${2} ; shift ; shift ;;
     --)
@@ -62,7 +60,7 @@ esac
 case "${cmd}" in
   init)
     test -z "${zhtoken}" && read -e -p 'Enter ZenHub API token: ' -s zhtoken ; echo
-    test -z "${ghtoken}" && read -e -p 'Enter GitHub personal access token: ' -s ghtoken ; echo
+    test -z "${ghtoken}" && read -e -p 'Enter GitHub personal access token (used solely for project slug lookups): ' -s ghtoken ; echo
   ;;
 esac
 case "${cmd}" in
@@ -79,7 +77,14 @@ esac
 ## Command utility functions ######################################################################
 function jqify() {
   case "${1}" in
-    GET) local rsp ; rsp=$(curl -f -s -H 'Accept: application/json' "${2}") ;;
+    GET)
+      local rsp
+      rsp=$(\
+        curl -f -s \
+          -H 'Accept: application/json' \
+          -H "X-Authentication-Token: ${zhtoken}" \
+          "${2}")
+    ;;
   esac
 
   case "$?" in
@@ -96,14 +101,12 @@ function lookup-project-id() {
 ## Command functions ##############################################################################
 function board() {
   local pid=$(lookup-project-id ${project})
-  jqify GET \
-    "https://api.zenhub.io/p1/repositories/${pid}/board?access_token=${zhtoken}"
+  jqify GET "https://api.zenhub.io/p1/repositories/${pid}/board"
 }
 
 function events() {
   local pid=$(lookup-project-id ${project})
-  jqify GET \
-    "https://api.zenhub.io/p1/repositories/${pid}/issues/${issue}/events?access_token=${zhtoken}"
+  jqify GET "https://api.zenhub.io/p1/repositories/${pid}/issues/${issue}/events"
 }
 
 function help() {
@@ -138,8 +141,7 @@ function init() {
 
 function issue() {
   local pid=$(lookup-project-id ${project})
-  jqify GET \
-    "https://api.zenhub.io/p1/repositories/${pid}/issues/${issue}?access_token=${zhtoken}"
+  jqify GET "https://api.zenhub.io/p1/repositories/${pid}/issues/${issue}"
 }
 
 function version() {
