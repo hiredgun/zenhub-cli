@@ -1,34 +1,25 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en-us">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>zenhub-cli | Powerful ZenHub CLI via pure bash</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <meta charset="UTF-8">
+    <title>zenhub-cli by rockymadden</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>zenhub-cli</h1>
-        <p>Powerful ZenHub CLI via pure bash</p>
+    <section class="page-header">
+      <h1 class="project-name">zenhub-cli</h1>
+      <h2 class="project-tagline">Powerful ZenHub CLI via pure bash</h2>
+      <a href="https://github.com/rockymadden/zenhub-cli" class="btn">View on GitHub</a>
+      <a href="https://github.com/rockymadden/zenhub-cli/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/rockymadden/zenhub-cli/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-        <p class="view"><a href="https://github.com/rockymadden/zenhub-cli">View the Project on GitHub <small>rockymadden/zenhub-cli</small></a></p>
-
-
-        <ul>
-          <li><a href="https://github.com/rockymadden/zenhub-cli/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/rockymadden/zenhub-cli/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/rockymadden/zenhub-cli">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <p><a href="https://github.com/rockymadden/zenhub-cli/releases"><img src="http://img.shields.io/badge/version-v0.0.0-blue.svg" alt="version"></a>
+    <section class="main-content">
+      <p><a href="https://github.com/rockymadden/zenhub-cli/releases"><img src="http://img.shields.io/badge/version-v0.1.0-blue.svg" alt="version"></a>
 <a href="http://semver.org"><img src="http://img.shields.io/badge/versioning-semver-blue.svg" alt="versioning"></a>
 <a href="https://guides.github.com/introduction/flow/"><img src="http://img.shields.io/badge/branching-github%20flow-blue.svg" alt="branching"></a>
 <a href="https://opensource.org/licenses/MIT"><img src="http://img.shields.io/badge/license-mit-blue.svg" alt="license"></a>
@@ -52,7 +43,7 @@ $ brew install zenhub-cli
 <span class="pl-c"># Initialize with your ZenHub and GitHub tokens:</span>
 $ zenhub init
 Enter ZenHub API token: <span class="pl-k">&lt;</span>zenhub token<span class="pl-k">&gt;</span>
-Enter GitHub personal access token (used <span class="pl-k">for</span> project slug lookups): <span class="pl-k">&lt;</span>github token<span class="pl-k">&gt;</span></pre></div>
+Enter GitHub personal access token (used solely <span class="pl-k">for</span> project slug lookups): <span class="pl-k">&lt;</span>github token<span class="pl-k">&gt;</span></pre></div>
 
 <blockquote>
 <p><strong>PROTIPS:</strong></p>
@@ -91,7 +82,7 @@ Core Commands:
 <li>Project slug represented as a combination of username and project name
 (e.g. rockymadden/zenhub-cli).</li>
 <li>
-<code>--</code> can be used as a placeholder for the project, when inside a GitHub-based git repo.</li>
+<code>--</code> can be used as a placeholder for the current project, when inside a GitHub-based git repo.</li>
 <li>Project placeholder is implicitly applied, when not provided and inside a GitHub-based git repo.</li>
 <li>Filters are simply <a href="https://stedolan.github.io/jq/manual/">jq filters</a>, you can provide any filter
 that it can handle.</li>
@@ -99,6 +90,42 @@ that it can handle.</li>
 allows for both traditional usage and prompt-based usage.</li>
 </ul>
 </blockquote>
+
+<h2>
+<a id="examples-and-recipes" class="anchor" href="#examples-and-recipes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Examples and Recipes</h2>
+
+<h3>
+<a id="board" class="anchor" href="#board" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>board</code>:</h3>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"># Implicit project:</span>
+$ zenhub board
+
+<span class="pl-c"># Placeheld project:</span>
+$ zenhub board --
+
+<span class="pl-c"># Explicit project:</span>
+$ zenhub board rockymadden/zenhub-cli
+
+<span class="pl-c"># With filter:</span>
+$ zenhub board --filter=<span class="pl-s"><span class="pl-pds">'</span>.pipelines | .[0] | .name<span class="pl-pds">'</span></span></pre></div>
+
+<h3>
+<a id="events" class="anchor" href="#events" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>events</code>:</h3>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"># Placeheld project and explicit issue:</span>
+$ zenhub events -- 1
+
+<span class="pl-c"># With filter:</span>
+$ zenhub events --filter=<span class="pl-s"><span class="pl-pds">'</span>.[0] | .user_id<span class="pl-pds">'</span></span></pre></div>
+
+<h3>
+<a id="issue" class="anchor" href="#issue" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>issue</code>:</h3>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"># Placeheld project and explicit issue:</span>
+$ zenhub issue -- 1
+
+<span class="pl-c"># With filter:</span>
+$ zenhub issue --filter=<span class="pl-s"><span class="pl-pds">'</span>.pipeline | .name<span class="pl-pds">'</span></span></pre></div>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
@@ -125,13 +152,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 </code></pre>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/rockymadden">rockymadden</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/rockymadden/zenhub-cli">zenhub-cli</a> is maintained by <a href="https://github.com/rockymadden">rockymadden</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
-    </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
+
+    </section>
+
+  
   </body>
 </html>
